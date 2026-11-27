@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pygri"
+version = "0.0.1"
+description = "Benchmark and deploy spiking neural networks across neuromorphic chips and simulators."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "Pygri Labs" }]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = []
+
+[project.optional-dependencies]
+nir = ["nir>=1.0.8"]
+snntorch = ["torch>=2.2", "snntorch>=0.9", "nir>=1.0.8", "nirtorch>=1.0"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+pygri = "pygri.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pygri"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
