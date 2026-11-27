@@ -15,27 +15,8 @@ import time
 
 from pygri.results import Metric, Provenance, TargetResult
 from pygri.targets import register
+from pygri.targets._nir_chain import UnsupportedGraphError, chain, if_threshold
 from pygri.targets.base import Target, TargetInfo, TargetKind, Workload
-
-
-class UnsupportedGraphError(ValueError):
-    pass
-
-
-def _chain(graph) -> list[str]:
-    nexts = dict(graph.edges)
-    if len(nexts) != len(graph.edges):
-        raise UnsupportedGraphError("only single-chain graphs are supported")
-    inputs = [k for k, n in graph.nodes.items() if type(n).__name__ == "Input"]
-    if len(inputs) != 1:
-        raise UnsupportedGraphError("graph must have exactly one Input node")
-    order, cur = [], inputs[0]
-    while cur is not None:
-        order.append(cur)
-        cur = nexts.get(cur)
-    if len(order) != len(graph.nodes):
-        raise UnsupportedGraphError("graph is not a single chain")
-    return order
 
 
 def build_network(graph):
@@ -46,7 +27,7 @@ def build_network(graph):
     import torch
 
     modules: list[torch.nn.Module] = []
-    for key in _chain(graph):
+    for key in chain(graph):
         node = graph.nodes[key]
         if isinstance(node, (nir.Input, nir.Output)):
             continue
@@ -62,16 +43,10 @@ def build_network(graph):
                     lin.bias.copy_(torch.as_tensor(np.asarray(node.bias), dtype=torch.float32))
             modules.append(lin)
         elif isinstance(node, nir.IF):
-            thr = np.unique(np.asarray(node.v_threshold) * np.asarray(node.r))
-            reset = np.zeros(1) if node.v_reset is None else np.unique(np.asarray(node.v_reset))
-            if thr.size != 1 or reset.size != 1 or float(reset[0]) != 0.0:
-                raise UnsupportedGraphError(
-                    f"node '{key}': only uniform thresholds and reset-to-zero are supported"
-                )
             modules.append(
                 snn.Leaky(
                     beta=1.0,
-                    threshold=float(thr[0]),
+                    threshold=if_threshold(key, node),
                     reset_mechanism="zero",
                     init_hidden=True,
                 )
