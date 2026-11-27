@@ -20,6 +20,7 @@ dependencies = []
 
 [project.optional-dependencies]
 nir = ["nir>=1.0.8"]
+snntorch = ["torch>=2.2", "snntorch>=0.9", "nir>=1.0.8", "nirtorch>=1.0"]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]

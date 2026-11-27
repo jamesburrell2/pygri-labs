@@ -6,6 +6,22 @@ from pygri.targets.base import Target, TargetInfo, TargetKind, Workload
 
 _REGISTRY: dict[str, type[Target]] = {}
 
+# Built-in adapters, imported on first use. Their heavy dependencies are imported
+# inside methods, so loading them here is cheap.
+_BUILTIN_MODULES = ("pygri.targets.snntorch_sim",)
+_builtins_loaded = False
+
+
+def _load_builtins() -> None:
+    global _builtins_loaded
+    if _builtins_loaded:
+        return
+    _builtins_loaded = True
+    import importlib
+
+    for module in _BUILTIN_MODULES:
+        importlib.import_module(module)
+
 
 def register(cls: type[Target]) -> type[Target]:
     """Class decorator that adds a Target to the registry."""
@@ -17,6 +33,7 @@ def register(cls: type[Target]) -> type[Target]:
 
 
 def get(name: str) -> Target:
+    _load_builtins()
     try:
         return _REGISTRY[name]()
     except KeyError as exc:
@@ -25,6 +42,7 @@ def get(name: str) -> Target:
 
 
 def all_targets() -> list[type[Target]]:
+    _load_builtins()
     return [_REGISTRY[k] for k in sorted(_REGISTRY)]
 
 

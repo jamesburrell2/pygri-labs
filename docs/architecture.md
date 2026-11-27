@@ -35,3 +35,15 @@ Model zoo ─────┘                                  │
 
 - Standard metric set: accuracy, latency, energy per inference. Add throughput or memory?
 - Energy units: microjoules per inference proposed.
+
+## Conversion and simulation semantics (Phase 1)
+
+- **Converter** (`pygri.convert.convert_sequential`): supports `Flatten`, `Linear`, `ReLU`.
+  Uses data-based weight normalisation (Diehl et al., 2015) and emits a NIR graph of
+  `Affine` and `IF` nodes (r = 1, threshold = 1, reset to 0, `metadata["dt"] = 1`).
+- **Inputs** are a constant current every timestep; the predicted class is the output
+  neuron with the most spikes.
+- **snnTorch target** loads NIR with Pygri's own loader instead of `snntorch.import_from_nir`,
+  because snnTorch's importer maps `IF` to a leaky neuron (beta = 0.9), which changes results.
+  A test checks the target against an independent NumPy simulation of the same graph.
+- Unsupported layers or nodes are reported, never silently approximated.
