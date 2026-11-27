@@ -5,7 +5,15 @@ spiking neural network, runs it on several neuromorphic simulators and chips, an
 one side-by-side report of accuracy, latency and energy. Every number says whether it was
 measured on hardware, measured in simulation, or estimated.
 
-Status: **pre-alpha (Phase 0).** Nothing works end to end yet.
+Status: **pre-alpha (Phase 1).** The pipeline runs end to end on synthetic data with one
+simulator target (snnTorch).
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install -e ".[snntorch]"
+pygri targets          # list targets and whether they are usable
+pygri demo             # train, convert, benchmark, write reports/demo/report.html
+```
 
 ## Planned targets
 
