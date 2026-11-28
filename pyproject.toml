@@ -21,6 +21,8 @@ dependencies = []
 [project.optional-dependencies]
 nir = ["nir>=1.0.8"]
 snntorch = ["torch>=2.2", "snntorch>=0.9", "nir>=1.0.8", "nirtorch>=1.0"]
+# lava-nc supports Python 3.10 only and pins numpy < 2.
+lava = ["lava-nc>=0.10", "nir>=1.0.8"]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]

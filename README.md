@@ -6,7 +6,7 @@ one side-by-side report of accuracy, latency and energy. Every number says wheth
 measured on hardware, measured in simulation, or estimated.
 
 Status: **pre-alpha (Phase 1).** The pipeline runs end to end on synthetic data with one
-simulator target (snnTorch).
+simulator targets (snnTorch and Intel Lava).
 
 ```bash
 pip install torch --index-url https://download.pytorch.org/whl/cpu
@@ -15,12 +15,15 @@ pygri targets          # list targets and whether they are usable
 pygri demo             # train, convert, benchmark, write reports/demo/report.html
 ```
 
+The Lava target needs Python 3.10 (a limit of `lava-nc`): `pip install -e ".[lava]"` in a
+3.10 environment.
+
 ## Planned targets
 
 | Target | Kind | Phase |
 | --- | --- | --- |
-| snnTorch | simulator | 1 |
-| Lava (Intel) | simulator | 1 |
+| snnTorch | simulator | 1 (done) |
+| Lava (Intel) | simulator | 1 (done) |
 | BrainChip Akida Cloud | cloud hardware | 2 |
 | SynSense, SpiNNaker2, Loihi 2 | various | later |
 

@@ -46,4 +46,10 @@ Model zoo ─────┘                                  │
 - **snnTorch target** loads NIR with Pygri's own loader instead of `snntorch.import_from_nir`,
   because snnTorch's importer maps `IF` to a leaky neuron (beta = 0.9), which changes results.
   A test checks the target against an independent NumPy simulation of the same graph.
+- **Lava target** runs the same graph with Lava's floating-point CPU models: `Dense` for
+  weights (biases through a separate `Dense` from a bias source) and `LIFReset` with
+  `du = 1`, `dv = 0` as the IF neuron. Samples run back to back in one Lava run; each
+  `Dense` adds one step of delay, so each layer resets at the start of its own window.
+  A test checks spike counts match a NumPy reference exactly. On the demo, Lava and
+  snnTorch give identical accuracy and spike counts.
 - Unsupported layers or nodes are reported, never silently approximated.

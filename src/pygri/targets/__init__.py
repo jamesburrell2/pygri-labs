@@ -8,7 +8,7 @@ _REGISTRY: dict[str, type[Target]] = {}
 
 # Built-in adapters, imported on first use. Their heavy dependencies are imported
 # inside methods, so loading them here is cheap.
-_BUILTIN_MODULES = ("pygri.targets.snntorch_sim",)
+_BUILTIN_MODULES = ("pygri.targets.snntorch_sim", "pygri.targets.lava_sim")
 _builtins_loaded = False
 
 
