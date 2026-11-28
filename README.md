@@ -27,9 +27,9 @@ pygri demo             # train, convert, benchmark, write reports/demo/report.ht
 Models move between tools through the open
 [Neuromorphic Intermediate Representation (NIR)](https://github.com/neuromorphs/NIR).
 
-## Model zoo (planned)
+## Model zoo
 
-Ready, benchmarked spiking models for edge tasks, starting with keyword spotting.
+Ready, benchmarked spiking models for edge tasks. The first is a keyword-spotting baseline; see [zoo/README.md](zoo/README.md).
 
 ## Development
 
